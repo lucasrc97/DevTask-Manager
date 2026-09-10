@@ -136,3 +136,6 @@ Para usar:
 - Deploy automático (Azure App Service, Docker/Kubernetes)
 - Logs estruturados e monitoramento (Application Insights)
 - HTTPS e variáveis de ambiente para segredos (Key Vault)
+
+## Testado por
+lucasr97 — 2026
