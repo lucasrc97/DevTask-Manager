@@ -7,6 +7,8 @@ export default function Dashboard() {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
   const navigate = useNavigate();
 
   const loadTasks = async () => {
@@ -47,6 +49,36 @@ export default function Dashboard() {
       setTasks(tasks.map((t) => (t.id === task.id ? data : t)));
     } catch {
       setError("Erro ao atualizar task.");
+    }
+  };
+
+  const startEdit = (task) => {
+    setEditingId(task.id);
+    setEditTitle(task.title);
+    setError("");
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditTitle("");
+  };
+
+  const saveEdit = async (e, task) => {
+    e.preventDefault();
+    const newTitle = editTitle.trim();
+    if (!newTitle) {
+      setError("O título não pode ser vazio.");
+      return;
+    }
+    try {
+      const { data } = await api.put(`/api/tasks/${task.id}`, {
+        title: newTitle,
+        isCompleted: task.isCompleted,
+      });
+      setTasks(tasks.map((t) => (t.id === task.id ? data : t)));
+      cancelEdit();
+    } catch {
+      setError("Erro ao editar task.");
     }
   };
 
@@ -98,10 +130,26 @@ export default function Dashboard() {
                 checked={task.isCompleted}
                 onChange={() => handleToggle(task)}
               />
-              <span>{task.title}</span>
-              <button className="delete" onClick={() => handleDelete(task.id)}>
-                Excluir
-              </button>
+              {editingId === task.id ? (
+                <form className="edit-form" onSubmit={(e) => saveEdit(e, task)}>
+                  <input
+                    type="text"
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                    autoFocus
+                  />
+                  <button type="submit">Salvar</button>
+                  <button type="button" onClick={cancelEdit}>Cancelar</button>
+                </form>
+              ) : (
+                <>
+                  <span>{task.title}</span>
+                  <button className="edit" onClick={() => startEdit(task)}>Editar</button>
+                  <button className="delete" onClick={() => handleDelete(task.id)}>
+                    Excluir
+                  </button>
+                </>
+              )}
             </li>
           ))}
         </ul>
