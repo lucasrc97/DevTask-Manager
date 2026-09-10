@@ -1,0 +1,155 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  max-width: 640px;
+  padding: 2rem;
+}
+
+/* Login */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: #1e293b;
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.auth-card h1 {
+  text-align: center;
+  color: #38bdf8;
+}
+
+.auth-card p {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #94a3b8;
+}
+
+label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+input {
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  background: #38bdf8;
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Dashboard */
+.dashboard header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard h1 {
+  color: #38bdf8;
+}
+
+.logout {
+  background: #ef4444;
+  color: white;
+}
+
+.new-task {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.new-task input {
+  flex: 1;
+}
+
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: #1e293b;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+}
+
+.task-list li.done span {
+  text-decoration: line-through;
+  color: #64748b;
+}
+
+.task-list li span {
+  flex: 1;
+}
+
+.delete {
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.error {
+  color: #f87171;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty {
+  color: #64748b;
+  text-align: center;
+}
