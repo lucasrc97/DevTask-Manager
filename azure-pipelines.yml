@@ -1,0 +1,93 @@
+# Azure DevOps Pipeline - DevTask Manager
+# Build + Testes + Publicação de artefatos
+
+trigger:
+  branches:
+    include:
+      - main # Dispara o pipeline em push na branch main
+  paths:
+    exclude:
+      - README.md
+
+pr:
+  branches:
+    include:
+      - "*" # Dispara o pipeline em qualquer Pull Request
+
+pool:
+  vmImage: ubuntu-latest # Agente Linux padrão da Microsoft
+
+variables:
+  buildConfiguration: "Release"
+  dotnetSdkVersion: "8.0.x"
+
+steps:
+  # Instala o SDK do .NET 8 no agente
+  - task: UseDotNet@2
+    displayName: "Instalar .NET 8 SDK"
+    inputs:
+      packageType: "sdk"
+      version: $(dotnetSdkVersion)
+
+  # Instala Node.js 20 para buildar o frontend React
+  - task: NodeTool@0
+    displayName: "Instalar Node.js 20"
+    inputs:
+      versionSpec: "20.x"
+
+  # Restaura os pacotes NuGet da solução
+  - task: DotNetCoreCLI@2
+    displayName: "Restaurar pacotes NuGet (dotnet restore)"
+    inputs:
+      command: "restore"
+      projects: "DevTaskManager.sln"
+
+  # Compila a solução em modo Release
+  - task: DotNetCoreCLI@2
+    displayName: "Compilar solução (dotnet build)"
+    inputs:
+      command: "build"
+      projects: "DevTaskManager.sln"
+      arguments: "--configuration $(buildConfiguration) --no-restore"
+
+  # Executa os testes reais com xUnit
+  - task: DotNetCoreCLI@2
+    displayName: "Executar testes xUnit (dotnet test)"
+    inputs:
+      command: "test"
+      projects: "backend.Tests/DevTaskManager.Api.Tests.csproj"
+      arguments: "--configuration $(buildConfiguration) --no-build --collect:\"XPlat Code Coverage\""
+      publishTestResults: true
+
+  # Instala dependências do frontend
+  - script: npm ci
+    displayName: "Instalar dependências do frontend (npm ci)"
+    workingDirectory: frontend
+
+  # Builda o frontend para produção (gera pasta dist/)
+  - script: npm run build
+    displayName: "Build do frontend (npm run build)"
+    workingDirectory: frontend
+
+  # Publica a API .NET em modo Release
+  - task: DotNetCoreCLI@2
+    displayName: "Publicar API (dotnet publish)"
+    inputs:
+      command: "publish"
+      projects: "backend/DevTaskManager.Api.csproj"
+      arguments: "--configuration $(buildConfiguration) --no-build --output $(Build.ArtifactStagingDirectory)/api"
+      zipAfterPublish: true
+
+  # Publica o frontend buildado
+  - task: CopyFiles@2
+    displayName: "Copiar frontend para o staging de artefatos"
+    inputs:
+      SourceFolder: "frontend/dist"
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/frontend"
+
+  # Publica os artefatos (API zipada + frontend) para uso em releases
+  - task: PublishBuildArtifacts@1
+    displayName: "Publicar artefatos do build"
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      ArtifactName: "devtask-drop"
