@@ -59,7 +59,7 @@ dotnet restore
 dotnet run
 ```
 
-A API sobe em `http://localhost:5088` (Swagger em `http://localhost:5088/swagger`).
+A API sobe em `http://localhost:5246` (Swagger em `http://localhost:5246/swagger`).
 
 O banco SQLite (`devtaskmanager.db`) é criado e migrado automaticamente na inicialização.
 
@@ -73,7 +73,7 @@ npm run dev
 
 O frontend sobe em `http://localhost:5173`.
 
-> O Vite tem um proxy configurado para `/api` → `http://localhost:5088`, e o backend aceita CORS de `http://localhost:5173`.
+> O Vite tem um proxy configurado para `/api` → `http://localhost:5246`, e o backend aceita CORS de `http://localhost:5173`.
 
 ### Testes
 
@@ -84,7 +84,7 @@ dotnet test DevTaskManager.sln
 ## Arquitetura
 
 ```
-[React + Vite (5173)] ──HTTP──▶ [API .NET 8 (5088)]
+[React + Vite (5173)] ──HTTP──▶ [API .NET 8 (5246)]
                                       │
                               [EF Core + SQLite]
 ```

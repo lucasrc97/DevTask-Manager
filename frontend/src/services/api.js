@@ -1,8 +1,9 @@
 import axios from "axios";
 
 // Base URL da API .NET 8
+// Deve bater com a porta do launchSettings.json do backend (http://localhost:5246)
 const api = axios.create({
-  baseURL: "http://localhost:5088",
+  baseURL: "http://localhost:5246",
 });
 
 // Interceptor: injeta o token JWT do localStorage em toda requisição

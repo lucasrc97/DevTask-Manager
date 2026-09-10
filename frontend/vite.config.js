@@ -8,7 +8,8 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:5088",
+        // Porta do backend corrigida para 5246 (mesma do launchSettings.json)
+        target: "http://localhost:5246",
         changeOrigin: true,
       },
     },
